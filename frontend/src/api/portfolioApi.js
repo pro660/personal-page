@@ -1,0 +1,26 @@
+import { httpClient } from './httpClient';
+
+export async function getHello(config) {
+  const { data } = await httpClient.get('/hello', config);
+  return data;
+}
+
+export async function getProfile(config) {
+  const { data } = await httpClient.get('/profile', config);
+  return data;
+}
+
+export async function getSkills(config) {
+  const { data } = await httpClient.get('/skills', config);
+  return data;
+}
+
+export async function getProjects(config) {
+  const { data } = await httpClient.get('/projects', config);
+  return data;
+}
+
+export async function createContactMessage(payload) {
+  const { data } = await httpClient.post('/contact', payload);
+  return data;
+}
