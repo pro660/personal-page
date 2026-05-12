@@ -1,3 +1,5 @@
+import './styles/ThemeToggle.css';
+
 export function ThemeToggle({ isDarkMode, onToggle }) {
   return (
     <button

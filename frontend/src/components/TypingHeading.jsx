@@ -1,4 +1,5 @@
 import { useTypingLoop } from '../hooks/useTypingLoop';
+import './styles/TypingHeading.css';
 
 const headingPhrases = [
   'console.log("김형석")',

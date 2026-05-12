@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createContactMessage } from '../../api/portfolioApi';
+import './styles/ContactSection.css';
 
 const initialForm = {
   name: '',
@@ -39,12 +40,12 @@ export function ContactSection() {
   }
 
   return (
-    <section className="contact reveal reveal-delay-3">
+    <section className="contact-section">
       <div>
         <h2>Contact</h2>
         <p>POST 요청으로 MySQL의 contact_messages 테이블에 저장됩니다.</p>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form className="contact-section__form" onSubmit={handleSubmit}>
         <input
           name="name"
           placeholder="Name"
@@ -70,7 +71,7 @@ export function ContactSection() {
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Sending...' : 'Send Message'}
         </button>
-        {submitMessage && <p className="submit-message">{submitMessage}</p>}
+        {submitMessage && <p className="contact-section__submit-message">{submitMessage}</p>}
       </form>
     </section>
   );

@@ -1,0 +1,12 @@
+.app-layout {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 96px 0 40px;
+}
+
+@media (max-width: 760px) {
+  .app-layout {
+    width: min(100% - 24px, 1120px);
+    padding-top: 112px;
+  }
+}

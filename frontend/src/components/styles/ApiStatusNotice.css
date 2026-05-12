@@ -1,0 +1,24 @@
+.api-status-notice {
+  margin: 24px 0;
+  border-left: 4px solid var(--color-rust);
+  padding: 16px 18px;
+  background: var(--color-surface);
+  color: var(--color-rust);
+  animation: api-status-notice-reveal-up 620ms ease both;
+}
+
+.api-status-notice code {
+  white-space: nowrap;
+}
+
+@keyframes api-status-notice-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
