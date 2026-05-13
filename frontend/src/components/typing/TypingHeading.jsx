@@ -3,7 +3,7 @@ import './styles/TypingHeading.css';
 
 const headingPhrases = [
   'console.log("김형석")',
-  '웹/앱 개발자 김형석입니다.',
+  '프론트엔드 개발자 김형석입니다.',
   'React + Spring Boot',
 ];
 

@@ -36,8 +36,50 @@
 
 .projects-section__links {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 14px;
   margin-top: 18px;
+}
+
+.projects-section__github-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  border: 0;
+  border-radius: 5px;
+  outline: 3px solid #181717;
+  outline-offset: -3px;
+  padding: 10px 15px;
+  background-color: #181717;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  transition:
+    background-color 400ms ease,
+    color 400ms ease,
+    transform 180ms ease;
+}
+
+.projects-section__github-button span,
+.projects-section__github-button svg {
+  color: currentColor;
+  transition: color 400ms ease;
+}
+
+.projects-section__github-button:hover {
+  background-color: transparent;
+  color: #181717;
+  transform: translateY(-2px);
+}
+
+body[data-theme='dark'] .projects-section__github-button:hover {
+  color: #fff;
+}
+
+.projects-section__links > a:not(.projects-section__github-button) {
+  align-self: center;
 }
 
 @keyframes projects-section-reveal-up {

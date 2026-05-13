@@ -17,6 +17,14 @@
   line-height: 1.7;
 }
 
+.contact-section__eyebrow {
+  margin-bottom: 8px;
+  color: var(--color-teal) !important;
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .contact-section__form {
   display: grid;
   gap: 12px;

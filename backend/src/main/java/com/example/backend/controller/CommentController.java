@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
+@Transactional(readOnly = true)
 public class CommentController {
 
     private final BoardPostRepository boardPostRepository;
@@ -42,6 +44,7 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public Comment createComment(
             @PathVariable Long postId,
             @Valid @RequestBody CommentRequest request,
@@ -52,6 +55,7 @@ public class CommentController {
     }
 
     @PutMapping("/comments/{commentId}")
+    @Transactional
     public Comment updateComment(
             @PathVariable Long commentId,
             @Valid @RequestBody CommentRequest request,
@@ -65,6 +69,7 @@ public class CommentController {
 
     @DeleteMapping("/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void deleteComment(@PathVariable Long commentId, Authentication authentication) {
         Comment comment = findComment(commentId);
         validateAuthor(comment, authentication);

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/posts")
+@Transactional(readOnly = true)
 public class BoardPostController {
 
     private final BoardPostRepository boardPostRepository;
@@ -67,6 +69,7 @@ public class BoardPostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public BoardPost createPost(@Valid @RequestBody BoardPostRequest request, Authentication authentication) {
         return boardPostRepository.save(new BoardPost(
                 request.title(),
@@ -76,6 +79,7 @@ public class BoardPostController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public BoardPost updatePost(
             @PathVariable Long id,
             @Valid @RequestBody BoardPostRequest request,
@@ -89,6 +93,7 @@ public class BoardPostController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void deletePost(@PathVariable Long id, Authentication authentication) {
         BoardPost post = findPost(id);
         validateAuthor(post, authentication);

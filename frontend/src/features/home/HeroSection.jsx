@@ -1,7 +1,7 @@
 import { TypingHeading } from '../../components/typing/TypingHeading';
 import './styles/HeroSection.css';
 
-export function HeroSection({ hello, profile }) {
+export function HeroSection({ hello }) {
   return (
     <section className="hero-section">
       <div>
@@ -10,13 +10,6 @@ export function HeroSection({ hello, profile }) {
           {hello || 'MySQL connected portfolio API'}
         </p>
         <TypingHeading />
-        <p className="hero-section__intro">
-          {profile?.intro || '백엔드 API를 기다리는 중입니다.'}
-        </p>
-        <div className="hero-section__meta">
-          <span>{profile?.role || 'Full-stack learner'}</span>
-          <span>{profile?.location || 'Seoul, Korea'}</span>
-        </div>
       </div>
     </section>
   );

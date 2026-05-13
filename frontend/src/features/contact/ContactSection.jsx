@@ -26,14 +26,17 @@ export function ContactSection() {
     }
 
     setIsSubmitting(true);
-    setSubmitMessage('Sending...');
+    setSubmitMessage('피드백을 전송하는 중입니다...');
 
     try {
-      await createContactMessage(form);
+      await createContactMessage({
+        ...form,
+        message: `[오류/개선 피드백]\n${form.message}`,
+      });
       setForm(initialForm);
-      setSubmitMessage('Message saved in MySQL.');
+      setSubmitMessage('피드백이 저장되었습니다. 확인 후 개선에 반영하겠습니다.');
     } catch (error) {
-      setSubmitMessage('Backend connection failed. Start Spring Boot and try again.');
+      setSubmitMessage('피드백 전송에 실패했습니다. 백엔드 서버 상태를 확인해 주세요.');
     } finally {
       setIsSubmitting(false);
     }
@@ -42,13 +45,16 @@ export function ContactSection() {
   return (
     <section className="contact-section">
       <div>
-        <h2>Contact</h2>
-        <p>POST 요청으로 MySQL의 contact_messages 테이블에 저장됩니다.</p>
+        <p className="contact-section__eyebrow">Feedback</p>
+        <h2>오류 제보와 개선 피드백</h2>
+        <p>
+          이 웹을 사용하다가 오류, 깨진 화면, 이상한 동작, 개선하면 좋을 부분을 발견했다면 이곳으로 알려주세요.
+        </p>
       </div>
       <form className="contact-section__form" onSubmit={handleSubmit}>
         <input
           name="name"
-          placeholder="Name"
+          placeholder="이름 또는 닉네임"
           value={form.name}
           onChange={handleChange}
           required
@@ -56,20 +62,20 @@ export function ContactSection() {
         <input
           name="email"
           type="email"
-          placeholder="Email"
+          placeholder="답변 받을 이메일"
           value={form.email}
           onChange={handleChange}
           required
         />
         <textarea
           name="message"
-          placeholder="Message"
+          placeholder="발견한 오류, 발생한 페이지, 재현 방법을 적어주세요."
           value={form.message}
           onChange={handleChange}
           required
         />
         <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Sending...' : 'Send Message'}
+          {isSubmitting ? '전송중...' : '피드백 보내기'}
         </button>
         {submitMessage && <p className="contact-section__submit-message">{submitMessage}</p>}
       </form>

@@ -36,6 +36,11 @@ body,
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
 body {
   margin: 0;
   background: var(--color-paper);
@@ -46,6 +51,11 @@ body {
   transition:
     background-color 220ms ease,
     color 220ms ease;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body::before {

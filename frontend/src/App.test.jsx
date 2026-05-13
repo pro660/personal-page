@@ -19,7 +19,7 @@ jest.mock('./hooks/usePortfolioData', () => ({
 test('renders personal page heading', () => {
   render(<App />);
   const headingElement = screen.getByRole('heading', {
-    name: 'console.log("김형석") / 웹/앱 개발자 김형석입니다. / React + Spring Boot',
+    name: 'console.log("김형석") / 프론트엔드 개발자 김형석입니다. / React + Spring Boot',
   });
   expect(headingElement).toBeInTheDocument();
 });

@@ -20,6 +20,11 @@ export async function getProjects(config) {
   return data;
 }
 
+export async function getOpportunities(config) {
+  const { data } = await httpClient.get('/opportunities', config);
+  return data;
+}
+
 export async function createContactMessage(payload) {
   const { data } = await httpClient.post('/contact', payload);
   return data;

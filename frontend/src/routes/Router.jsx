@@ -12,6 +12,7 @@ import { BoardDetailPage } from '../pages/board/BoardDetailPage';
 import { BoardEditPage } from '../pages/board/BoardEditPage';
 import { BoardListPage } from '../pages/board/BoardListPage';
 import { BoardWritePage } from '../pages/board/BoardWritePage';
+import { ContestListPage } from '../pages/contests/ContestListPage';
 import { HomePage } from '../pages/home/HomePage';
 import { ProtectedRoute } from './ProtectedRoute';
 
@@ -24,6 +25,7 @@ export function Router() {
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/contests" element={<ContestListPage />} />
               <Route path="/board" element={<BoardListPage />} />
               <Route path="/board/:id" element={<BoardDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
