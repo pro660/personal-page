@@ -55,6 +55,10 @@ public class User {
         return passwordHash;
     }
 
+    public void changePasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

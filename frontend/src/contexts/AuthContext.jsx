@@ -1,23 +1,12 @@
-import { createContext, useContext, useMemo, useState } from 'react';
-import { login as loginRequest, register as registerRequest } from '../api/authApi';
-
-const STORAGE_KEY = 'portfolio-user';
+import { createContext, useContext, useState } from 'react';
+import {
+  deleteAccount as deleteAccountRequest,
+  login as loginRequest,
+  logout as logoutRequest,
+  register as registerRequest,
+} from '../api/authApi';
+import { clearStoredUser, getRefreshToken, getStoredUser, saveStoredUser } from '../utils/authStorage';
 const AuthContext = createContext(null);
-
-function getStoredUser() {
-  const storedValue = window.localStorage.getItem(STORAGE_KEY);
-
-  if (!storedValue) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(storedValue);
-  } catch (error) {
-    window.localStorage.removeItem(STORAGE_KEY);
-    return null;
-  }
-}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(getStoredUser);
@@ -25,32 +14,45 @@ export function AuthProvider({ children }) {
   async function login(credentials) {
     const authenticatedUser = await loginRequest(credentials);
     setUser(authenticatedUser);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(authenticatedUser));
+    saveStoredUser(authenticatedUser);
     return authenticatedUser;
   }
 
   async function register(payload) {
     const registeredUser = await registerRequest(payload);
     setUser(registeredUser);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(registeredUser));
+    saveStoredUser(registeredUser);
     return registeredUser;
   }
 
-  function logout() {
+  async function logout() {
+    const refreshToken = getRefreshToken();
     setUser(null);
-    window.localStorage.removeItem(STORAGE_KEY);
+    clearStoredUser();
+
+    if (refreshToken) {
+      try {
+        await logoutRequest(refreshToken);
+      } catch (error) {
+        // Local logout should still complete even if the server token is already gone.
+      }
+    }
   }
 
-  const value = useMemo(
-    () => ({
-      isAuthenticated: Boolean(user),
-      login,
-      logout,
-      register,
-      user,
-    }),
-    [user]
-  );
+  async function deleteAccount() {
+    await deleteAccountRequest();
+    setUser(null);
+    clearStoredUser();
+  }
+
+  const value = {
+    deleteAccount,
+    isAuthenticated: Boolean(user),
+    login,
+    logout,
+    register,
+    user,
+  };
 
   return (
     <AuthContext.Provider value={value}>

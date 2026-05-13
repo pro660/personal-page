@@ -1,7 +1,7 @@
 import { httpClient } from './httpClient';
 
-export async function getPosts() {
-  const { data } = await httpClient.get('/posts');
+export async function getPosts(params = {}) {
+  const { data } = await httpClient.get('/posts', { params });
   return data;
 }
 

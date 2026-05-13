@@ -1,4 +1,4 @@
-import { TypingHeading } from '../../components/TypingHeading';
+import { TypingHeading } from '../../components/typing/TypingHeading';
 import './styles/HeroSection.css';
 
 export function HeroSection({ hello, profile }) {

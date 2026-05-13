@@ -63,7 +63,7 @@ public class DataSeeder {
         }
 
         boardPostRepository.save(new BoardPost(
-                "첫 번째 게시글입니다",
+                "첫 번째 게시글입니다.",
                 "React Router로 목록에서 상세 페이지까지 이동하는 흐름을 확인하는 예시 글입니다.",
                 "admin"
         ));
