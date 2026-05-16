@@ -8,12 +8,33 @@ export function ContestListPage() {
   const { opportunities, opportunitiesStatus, status } = usePortfolioData({ includeCore: false });
   const [searchKeyword, setSearchKeyword] = useState('');
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
-  const filteredOpportunities = useMemo(() => {
-    if (!normalizedKeyword) {
-      return opportunities;
-    }
+  const uniqueOpportunities = useMemo(() => {
+    const seenOpportunityKeys = new Set();
 
     return opportunities.filter((opportunity) => {
+      const opportunityKey = [
+        opportunity.title,
+        opportunity.source,
+        opportunity.publishedAt,
+      ]
+        .filter(Boolean)
+        .join('|')
+        .toLowerCase();
+
+      if (!opportunityKey || seenOpportunityKeys.has(opportunityKey)) {
+        return false;
+      }
+
+      seenOpportunityKeys.add(opportunityKey);
+      return true;
+    });
+  }, [opportunities]);
+  const filteredOpportunities = useMemo(() => {
+    if (!normalizedKeyword) {
+      return uniqueOpportunities;
+    }
+
+    return uniqueOpportunities.filter((opportunity) => {
       const searchableText = [
         opportunity.title,
         opportunity.source,
@@ -26,7 +47,7 @@ export function ContestListPage() {
 
       return searchableText.includes(normalizedKeyword);
     });
-  }, [normalizedKeyword, opportunities]);
+  }, [normalizedKeyword, uniqueOpportunities]);
 
   const listTitle =
     opportunitiesStatus === 'success'
@@ -55,11 +76,6 @@ export function ContestListPage() {
               type="search"
               value={searchKeyword}
             />
-            {searchKeyword ? (
-              <button aria-label="검색어 지우기" onClick={() => setSearchKeyword('')} type="button">
-                지우기
-              </button>
-            ) : null}
           </form>
         }
         opportunities={filteredOpportunities}

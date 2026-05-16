@@ -1,10 +1,14 @@
 .typing-heading {
-  max-width: 760px;
-  min-height: 1em;
-  overflow-wrap: anywhere;
-  font-size: clamp(1.8rem, 6vw, 2.45rem);
+  --typing-font-size: clamp(1.8rem, 6vw, 2.45rem);
+  --typing-line-height: 1.24;
 
-  inline-size: auto;
+  max-width: 760px;
+  block-size: calc(var(--typing-font-size) * var(--typing-line-height) * 2);
+  margin-bottom: 18px;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  font-size: var(--typing-font-size);
+  line-height: var(--typing-line-height);
 }
 
 .typing-cursor {

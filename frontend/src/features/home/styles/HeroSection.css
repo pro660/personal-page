@@ -1,6 +1,11 @@
+.top{
+  margin-top: 20px;
+  margin-bottom: -50px;
+}
+
 .hero-section {
   display: grid;
-  min-height: 240px;
+  min-height: 150px;
   align-items: center;
   border-bottom: 1px solid var(--line-soft);
   animation: hero-section-reveal-up 620ms ease both;

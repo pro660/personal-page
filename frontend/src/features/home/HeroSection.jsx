@@ -4,7 +4,7 @@ import './styles/HeroSection.css';
 export function HeroSection({ hello }) {
   return (
     <section className="hero-section">
-      <div>
+      <div className='top'>
         <p className="hero-section__eyebrow">Portfolio API</p>
         <p className="hero-section__api-status">
           {hello || 'MySQL connected portfolio API'}

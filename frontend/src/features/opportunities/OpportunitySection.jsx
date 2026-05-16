@@ -54,12 +54,12 @@ export function OpportunitySection({
         </div>
       ) : visibleOpportunities.length > 0 ? (
         <div className="opportunity-section__grid">
-          {visibleOpportunities.map((item) => (
+          {visibleOpportunities.map((item, index) => (
             <a
               aria-label={`${item.title} 상세 내용 열기`}
               className="opportunity-section__card"
               href={item.url}
-              key={`${item.source}-${item.title}`}
+              key={`${item.url || `${item.source}-${item.title}`}-${index}`}
               rel="noreferrer"
               target="_blank"
             >
