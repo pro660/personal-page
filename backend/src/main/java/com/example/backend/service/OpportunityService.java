@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -38,12 +39,12 @@ public class OpportunityService {
     private static final int PER_SOURCE_LIMIT = 2;
     private static final String SCIENCE_ENGINEERING_CATEGORY = "과학/공학";
     private static final List<OpportunitySource> SOURCES = List.of(
-            new OpportunitySource("행정안전부", "공공/정책 공모전", List.of("행정안전부", "행안부")),
-            new OpportunitySource("국토교통부", "국토/교통 공모전", List.of("국토교통부", "국토부")),
-            new OpportunitySource("관광데이터", "관광 데이터 공모전", List.of("관광데이터", "한국관광공사", "관광공사", "문화체육관광")),
-            new OpportunitySource("토스", "핀테크/서비스 챌린지", List.of("토스", "비바리퍼블리카", "toss")),
-            new OpportunitySource("네이버", "플랫폼/AI 챌린지", List.of("네이버", "naver")),
-            new OpportunitySource("카카오", "플랫폼/관광 공모전", List.of("카카오", "kakao"))
+            new OpportunitySource("행정안전부", List.of("행정안전부", "행안부")),
+            new OpportunitySource("국토교통부", List.of("국토교통부", "국토부")),
+            new OpportunitySource("관광데이터", List.of("관광데이터", "한국관광공사", "관광공사", "문화체육관광")),
+            new OpportunitySource("토스", List.of("토스", "비바리퍼블리카", "toss")),
+            new OpportunitySource("네이버", List.of("네이버", "naver")),
+            new OpportunitySource("카카오", List.of("카카오", "kakao"))
     );
 
     private final RestClient restClient;
@@ -91,6 +92,7 @@ public class OpportunityService {
         List<OpportunityResponse> responses = new ArrayList<>();
         Set<String> seenUrls = new HashSet<>();
         Map<String, Integer> sourceCounts = new HashMap<>();
+        long currentTimeMillis = Instant.now().toEpochMilli();
 
         for (int page = 1; page <= MAX_PAGES && responses.size() < MAX_ITEMS; page += 1) {
             try {
@@ -108,7 +110,7 @@ public class OpportunityService {
                     continue;
                 }
 
-                collectOpenActivities(activities, responses, seenUrls, sourceCounts);
+                collectOpenActivities(activities, responses, seenUrls, sourceCounts, currentTimeMillis);
             } catch (Exception exception) {
                 log.warn("Failed to fetch opportunity detail links from Linkareer page {}", page, exception);
             }
@@ -121,7 +123,8 @@ public class OpportunityService {
             JsonNode apolloState,
             List<OpportunityResponse> responses,
             Set<String> seenUrls,
-            Map<String, Integer> sourceCounts
+            Map<String, Integer> sourceCounts,
+            long currentTimeMillis
     ) {
         apolloState.properties().forEach(entry -> {
             if (responses.size() >= MAX_ITEMS) {
@@ -147,7 +150,7 @@ public class OpportunityService {
 
             long recruitCloseAt = activity.path("recruitCloseAt").asLong(0);
 
-            if (isClosed(recruitCloseAt)) {
+            if (isClosed(recruitCloseAt, currentTimeMillis)) {
                 return;
             }
 
@@ -175,9 +178,10 @@ public class OpportunityService {
 
     private JsonNode getApolloState(String html) throws java.io.IOException {
         Document document = Jsoup.parse(html);
-        String nextData = document.selectFirst("script#__NEXT_DATA__") == null
+        Element nextDataScript = document.selectFirst("script#__NEXT_DATA__");
+        String nextData = nextDataScript == null
                 ? ""
-                : document.selectFirst("script#__NEXT_DATA__").data();
+                : nextDataScript.data();
 
         if (nextData.isBlank()) {
             return MissingNode.getInstance();
@@ -221,8 +225,8 @@ public class OpportunityService {
         return organization;
     }
 
-    private boolean isClosed(long recruitCloseAt) {
-        return recruitCloseAt > 0 && recruitCloseAt < Instant.now().toEpochMilli();
+    private boolean isClosed(long recruitCloseAt, long currentTimeMillis) {
+        return recruitCloseAt > 0 && recruitCloseAt < currentTimeMillis;
     }
 
     private OpportunitySource findSource(String value) {
@@ -241,7 +245,7 @@ public class OpportunityService {
                 : title.replaceFirst("^추천\\s*", "").replaceAll("\\s+", " ").trim();
     }
 
-    private record OpportunitySource(String name, String type, List<String> aliases) {
+    private record OpportunitySource(String name, List<String> aliases) {
     }
 
     private record CachedOpportunities(List<OpportunityResponse> items, Instant cachedAt) {

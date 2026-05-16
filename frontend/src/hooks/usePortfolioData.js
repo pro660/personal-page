@@ -25,37 +25,41 @@ const fallbackData = {
 
 const initialState = {
   ...fallbackData,
+  opportunitiesStatus: 'loading',
   status: 'loading',
 };
 
-export function usePortfolioData() {
-  const [state, setState] = useState(initialState);
+export function usePortfolioData({ includeCore = true, includeOpportunities = true } = {}) {
+  const [state, setState] = useState(() => ({
+    ...initialState,
+    opportunitiesStatus: includeOpportunities ? 'loading' : 'success',
+    status: includeCore ? 'loading' : 'success',
+  }));
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     const requestConfig = { signal: controller.signal };
 
-    async function loadPageData() {
+    async function loadCoreData() {
       try {
-        const [helloData, skillsData, projectsData, opportunitiesData] = await Promise.all([
+        const [helloData, skillsData, projectsData] = await Promise.all([
           getHello(requestConfig),
           getSkills(requestConfig),
           getProjects(requestConfig),
-          getOpportunities(requestConfig),
         ]);
 
         if (!isMounted) {
           return;
         }
 
-        setState({
+        setState((currentState) => ({
+          ...currentState,
           hello: helloData.message || fallbackData.hello,
           skills: skillsData?.length > 0 ? skillsData : fallbackData.skills,
           projects: projectsData?.length > 0 ? projectsData : fallbackData.projects,
-          opportunities: opportunitiesData?.length > 0 ? opportunitiesData : fallbackData.opportunities,
           status: 'success',
-        });
+        }));
       } catch (error) {
         if (error.code === 'ERR_CANCELED') {
           return;
@@ -67,21 +71,54 @@ export function usePortfolioData() {
             hello: currentState.hello || fallbackData.hello,
             skills: currentState.skills.length > 0 ? currentState.skills : fallbackData.skills,
             projects: currentState.projects.length > 0 ? currentState.projects : fallbackData.projects,
-            opportunities:
-              currentState.opportunities.length > 0 ? currentState.opportunities : fallbackData.opportunities,
             status: 'error',
           }));
         }
       }
     }
 
-    loadPageData();
+    async function loadOpportunityData() {
+      try {
+        const opportunitiesData = await getOpportunities(requestConfig);
+
+        if (!isMounted) {
+          return;
+        }
+
+        setState((currentState) => ({
+          ...currentState,
+          opportunities: opportunitiesData?.length > 0 ? opportunitiesData : fallbackData.opportunities,
+          opportunitiesStatus: 'success',
+        }));
+      } catch (error) {
+        if (error.code === 'ERR_CANCELED') {
+          return;
+        }
+
+        if (isMounted) {
+          setState((currentState) => ({
+            ...currentState,
+            opportunities:
+              currentState.opportunities?.length > 0 ? currentState.opportunities : fallbackData.opportunities,
+            opportunitiesStatus: 'error',
+          }));
+        }
+      }
+    }
+
+    if (includeCore) {
+      loadCoreData();
+    }
+
+    if (includeOpportunities) {
+      loadOpportunityData();
+    }
 
     return () => {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [includeCore, includeOpportunities]);
 
   return state;
 }

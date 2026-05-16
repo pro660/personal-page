@@ -3,8 +3,16 @@
   animation: opportunity-section-rise 620ms ease 180ms both;
 }
 
+.opportunity-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
 .opportunity-section__header p {
-  margin-bottom: 8px;
+  margin: 0 0 8px;
   color: var(--color-teal);
   font-size: 0.84rem;
   font-weight: 900;
@@ -12,7 +20,13 @@
 }
 
 .opportunity-section__header h2 {
-  margin-bottom: 18px;
+  margin: 0;
+}
+
+.opportunity-section__action {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
 }
 
 .opportunity-section__header span {
@@ -31,12 +45,50 @@
 
 .opportunity-section__card,
 .opportunity-section__checklist,
-.opportunity-section__empty {
+.opportunity-section__empty,
+.opportunity-section__loading {
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 20px;
   background: var(--color-surface);
   backdrop-filter: blur(18px);
+}
+
+.opportunity-section__loading {
+  display: grid;
+  min-height: 235px;
+  place-items: center;
+}
+
+.opportunity-section__loader {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  margin: auto;
+}
+
+.opportunity-section__loader::before {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 48px;
+  height: 5px;
+  border-radius: 50%;
+  animation: shadow324 0.5s linear infinite;
+  background: #f0808050;
+  content: '';
+}
+
+.opportunity-section__loader::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  animation: jump7456 0.5s linear infinite;
+  background: #f08080;
+  content: '';
 }
 
 .opportunity-section__card {
@@ -158,7 +210,50 @@
   }
 }
 
+@keyframes jump7456 {
+  15% {
+    border-bottom-right-radius: 3px;
+  }
+
+  25% {
+    transform: translateY(9px) rotate(22.5deg);
+  }
+
+  50% {
+    border-bottom-right-radius: 40px;
+    transform: translateY(18px) scale(1, 0.9) rotate(45deg);
+  }
+
+  75% {
+    transform: translateY(9px) rotate(67.5deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(90deg);
+  }
+}
+
+@keyframes shadow324 {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    transform: scale(1.2, 1);
+  }
+}
+
 @media (max-width: 860px) {
+  .opportunity-section__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .opportunity-section__action {
+    justify-content: flex-start;
+  }
+
   .opportunity-section__grid {
     grid-template-columns: 1fr;
   }

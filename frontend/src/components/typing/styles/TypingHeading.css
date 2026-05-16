@@ -3,6 +3,8 @@
   min-height: 1em;
   overflow-wrap: anywhere;
   font-size: clamp(1.8rem, 6vw, 2.45rem);
+
+  inline-size: auto;
 }
 
 .typing-cursor {

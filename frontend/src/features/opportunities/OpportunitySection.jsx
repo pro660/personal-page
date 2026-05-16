@@ -27,20 +27,32 @@ function formatOpportunityDate(value) {
 
 export function OpportunitySection({
   opportunities = [],
+  emptyDescription = '외부 공모전 목록에 접근할 수 없거나, 현재 진행중인 과학/공학 공모전을 찾지 못한 상태입니다.',
+  emptyTitle = '상세 링크를 가져오지 못했습니다.',
+  headerAction = null,
   limit,
+  status = 'success',
   showChecklist = true,
   showMoreLink = false,
   title = '과학/공학 공모전과 대회 정보',
 }) {
   const visibleOpportunities = Number.isInteger(limit) ? opportunities.slice(0, limit) : opportunities;
+  const isLoading = status === 'loading';
 
   return (
     <section className="opportunity-section">
       <div className="opportunity-section__header">
-        <p>Contest Radar</p>
-        <h2>{title}</h2>
+        <div>
+          <p>Contest Radar</p>
+          <h2>{title}</h2>
+        </div>
+        {headerAction ? <div className="opportunity-section__action">{headerAction}</div> : null}
       </div>
-      {visibleOpportunities.length > 0 ? (
+      {isLoading ? (
+        <div className="opportunity-section__loading" role="status" aria-label="공모전 목록을 불러오는 중">
+          <div className="opportunity-section__loader" />
+        </div>
+      ) : visibleOpportunities.length > 0 ? (
         <div className="opportunity-section__grid">
           {visibleOpportunities.map((item) => (
             <a
@@ -67,11 +79,11 @@ export function OpportunitySection({
         </div>
       ) : (
         <div className="opportunity-section__empty">
-          <h3>상세 링크를 가져오지 못했습니다.</h3>
-          <p>외부 공모전 목록에 접근할 수 없거나, 현재 진행중인 과학/공학 공모전을 찾지 못한 상태입니다.</p>
+          <h3>{emptyTitle}</h3>
+          <p>{emptyDescription}</p>
         </div>
       )}
-      {showMoreLink && opportunities.length > visibleOpportunities.length ? (
+      {!isLoading && showMoreLink && opportunities.length > visibleOpportunities.length ? (
         <div className="opportunity-section__more">
           <Link to="/contests">공모전 목록 전체 보기</Link>
         </div>

@@ -8,13 +8,13 @@ import { usePortfolioData } from '../../hooks/usePortfolioData';
 import './styles/HomePage.css';
 
 export function HomePage() {
-  const { hello, skills, projects, opportunities, status } = usePortfolioData();
+  const { hello, skills, projects, opportunities, opportunitiesStatus, status } = usePortfolioData();
 
   return (
     <div className="home-page">
       <HeroSection hello={hello} />
       <ApiStatusNotice status={status} />
-      <OpportunitySection opportunities={opportunities} limit={4} showMoreLink />
+      <OpportunitySection opportunities={opportunities} limit={4} status={opportunitiesStatus} showMoreLink />
       <section className="home-page__section-grid">
         <SkillsSection skills={skills} />
         <div className="home-page__api-flow">
