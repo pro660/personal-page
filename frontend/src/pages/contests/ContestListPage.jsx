@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ApiStatusNotice } from '../../components/common/ApiStatusNotice';
+import { SearchField } from '../../components/common/SearchField';
 import { OpportunitySection } from '../../features/opportunities/OpportunitySection';
 import { usePortfolioData } from '../../hooks/usePortfolioData';
 import './styles/ContestListPage.css';
@@ -65,18 +66,15 @@ export function ContestListPage() {
         emptyDescription={emptyDescription}
         emptyTitle={emptyTitle}
         headerAction={
-          <form className="contest-list-page__search" onSubmit={(event) => event.preventDefault()} role="search">
-            <label htmlFor="contest-search">공모전 검색</label>
-            <input
-              aria-label="공모전 검색"
-              disabled={opportunitiesStatus === 'loading'}
-              id="contest-search"
-              onChange={(event) => setSearchKeyword(event.target.value)}
-              placeholder="검색어 입력"
-              type="search"
-              value={searchKeyword}
-            />
-          </form>
+          <SearchField
+            disabled={opportunitiesStatus === 'loading'}
+            id="contest-search"
+            label="공모전 검색"
+            onChange={setSearchKeyword}
+            onClear={() => setSearchKeyword('')}
+            placeholder="검색어 입력"
+            value={searchKeyword}
+          />
         }
         opportunities={filteredOpportunities}
         status={opportunitiesStatus}

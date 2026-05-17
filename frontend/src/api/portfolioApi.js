@@ -25,6 +25,11 @@ export async function getOpportunities(config) {
   return data;
 }
 
+export async function getJobs(config) {
+  const { data } = await httpClient.get('/jobs', config);
+  return data;
+}
+
 export async function createContactMessage(payload) {
   const { data } = await httpClient.post('/contact', payload);
   return data;

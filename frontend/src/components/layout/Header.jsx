@@ -20,6 +20,7 @@ export function Header() {
       <nav className="site-header__nav" aria-label="주요 메뉴">
         <NavLink to="/about">About</NavLink>
         <NavLink to="/contests">Contests</NavLink>
+        <NavLink to="/jobs">Jobs</NavLink>
         <NavLink to="/board">Board</NavLink>
       </nav>
       <div className="site-header__actions">
