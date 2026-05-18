@@ -21,6 +21,8 @@ export function JobsPage() {
         job.jobType,
         job.experience,
         job.salary,
+        job.education,
+        job.keyword,
         job.source,
       ]
         .filter(Boolean)

@@ -9,8 +9,12 @@ public record JobResponse(
         String jobType,
         String experience,
         String salary,
+        String education,
+        String keyword,
         String postedAt,
         String deadlineAt,
+        String readCount,
+        String applyCount,
         String source
 ) {
 }

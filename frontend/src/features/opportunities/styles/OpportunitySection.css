@@ -45,8 +45,7 @@
 
 .opportunity-section__card,
 .opportunity-section__checklist,
-.opportunity-section__empty,
-.opportunity-section__loading {
+.opportunity-section__empty {
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 20px;

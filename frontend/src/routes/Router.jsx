@@ -16,12 +16,14 @@ import { ContestListPage } from '../pages/contests/ContestListPage';
 import { HomePage } from '../pages/home/HomePage';
 import { JobsPage } from '../pages/jobs/JobsPage';
 import { ProtectedRoute } from './ProtectedRoute';
+import { ScrollReset } from './ScrollReset';
 
 export function Router() {
   return (
     <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
       <AuthProvider>
         <ToastProvider>
+          <ScrollReset />
           <Routes>
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />

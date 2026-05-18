@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import './styles/Header.css';
@@ -6,10 +6,12 @@ import './styles/Header.css';
 export function Header() {
   const { isAuthenticated, logout } = useAuth();
   const { showToast } = useToast();
+  const navigate = useNavigate();
 
   async function handleLogout() {
     await logout();
     showToast('로그아웃되었습니다.');
+    navigate('/', { replace: true });
   }
 
   return (

@@ -81,6 +81,12 @@ export function JobSection({
                     <dd>{job.salary}</dd>
                   </>
                 ) : null}
+                {job.education ? (
+                  <>
+                    <dt>학력</dt>
+                    <dd>{job.education}</dd>
+                  </>
+                ) : null}
               </dl>
               <div className="job-section__footer">
                 {job.deadlineAt ? (
@@ -88,6 +94,11 @@ export function JobSection({
                 ) : (
                   <span>마감일 확인 필요</span>
                 )}
+                {job.readCount || job.applyCount ? (
+                  <span>
+                    조회 {job.readCount || 0} / 지원 {job.applyCount || 0}
+                  </span>
+                ) : null}
               </div>
             </a>
           ))}

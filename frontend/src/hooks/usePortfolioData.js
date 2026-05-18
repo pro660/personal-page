@@ -29,6 +29,32 @@ const initialState = {
   status: 'loading',
 };
 
+const OPPORTUNITY_RETRY_DELAYS = [0, 1200, 2200, 3500];
+
+function wait(ms, signal) {
+  if (ms === 0) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) {
+      reject(new DOMException('Request canceled', 'AbortError'));
+      return;
+    }
+
+    const timeoutId = window.setTimeout(resolve, ms);
+
+    signal.addEventListener(
+      'abort',
+      () => {
+        window.clearTimeout(timeoutId);
+        reject(new DOMException('Request canceled', 'AbortError'));
+      },
+      { once: true }
+    );
+  });
+}
+
 export function usePortfolioData({ includeCore = true, includeOpportunities = true } = {}) {
   const [state, setState] = useState(() => ({
     ...initialState,
@@ -78,31 +104,43 @@ export function usePortfolioData({ includeCore = true, includeOpportunities = tr
     }
 
     async function loadOpportunityData() {
-      try {
-        const opportunitiesData = await getOpportunities(requestConfig);
+      let lastError = null;
 
-        if (!isMounted) {
-          return;
+      for (const retryDelay of OPPORTUNITY_RETRY_DELAYS) {
+        try {
+          await wait(retryDelay, controller.signal);
+          const opportunitiesData = await getOpportunities(requestConfig);
+
+          if (!isMounted) {
+            return;
+          }
+
+          if (opportunitiesData?.length > 0) {
+            setState((currentState) => ({
+              ...currentState,
+              opportunities: opportunitiesData,
+              opportunitiesStatus: 'success',
+            }));
+            return;
+          }
+
+          lastError = null;
+        } catch (error) {
+          if (error.code === 'ERR_CANCELED' || error.name === 'AbortError') {
+            return;
+          }
+
+          lastError = error;
         }
+      }
 
+      if (isMounted) {
         setState((currentState) => ({
           ...currentState,
-          opportunities: opportunitiesData?.length > 0 ? opportunitiesData : fallbackData.opportunities,
-          opportunitiesStatus: 'success',
+          opportunities:
+            currentState.opportunities?.length > 0 ? currentState.opportunities : fallbackData.opportunities,
+          opportunitiesStatus: lastError ? 'error' : 'success',
         }));
-      } catch (error) {
-        if (error.code === 'ERR_CANCELED') {
-          return;
-        }
-
-        if (isMounted) {
-          setState((currentState) => ({
-            ...currentState,
-            opportunities:
-              currentState.opportunities?.length > 0 ? currentState.opportunities : fallbackData.opportunities,
-            opportunitiesStatus: 'error',
-          }));
-        }
       }
     }
 

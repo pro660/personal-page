@@ -39,7 +39,7 @@ export function PasswordChangePage() {
       await changePassword(form);
       showToast('비밀번호를 변경했습니다. 다시 로그인해 주세요.');
       await logout();
-      navigate('/login', { replace: true });
+      navigate('/', { replace: true });
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, '비밀번호 변경에 실패했습니다.'));
     } finally {

@@ -24,7 +24,7 @@ public class JobService {
     private static final String SARAMIN_JOB_SEARCH_PATH = "/job-search";
     private static final String JOB_KEYWORDS = "React Spring Boot Java 프론트엔드 백엔드 웹개발";
     private static final Duration CACHE_TTL = Duration.ofMinutes(10);
-    private static final int MAX_ITEMS = 60;
+    private static final int MAX_ITEMS = 110;
 
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
@@ -99,7 +99,19 @@ public class JobService {
                 return List.of();
             }
 
-            return parseJobs(objectMapper.readTree(responseBody));
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode errorResult = root.path("result");
+
+            if (!errorResult.isMissingNode()) {
+                log.warn(
+                        "Saramin job search API returned error code {}: {}",
+                        errorResult.path("code").asText("unknown"),
+                        errorResult.path("message").asText("")
+                );
+                return List.of();
+            }
+
+            return parseJobs(root);
         } catch (Exception exception) {
             log.warn("Failed to fetch job listings from Saramin", exception);
             return List.of();
@@ -125,7 +137,7 @@ public class JobService {
     }
 
     private void addActiveJob(JsonNode job, List<JobResponse> responses) {
-        if (!"1".equals(job.path("active").asText())) {
+        if (job.path("active").asInt(0) != 1) {
             return;
         }
 
@@ -140,8 +152,12 @@ public class JobService {
                 position.path("job-type").path("name").asText(""),
                 position.path("experience-level").path("name").asText(""),
                 job.path("salary").path("name").asText(""),
+                position.path("required-education-level").path("name").asText(""),
+                job.path("keyword").asText(""),
                 job.path("posting-date").asText(""),
                 job.path("expiration-date").asText(""),
+                job.path("read-cnt").asText(""),
+                job.path("apply-cnt").asText(""),
                 "사람인"
         ));
     }

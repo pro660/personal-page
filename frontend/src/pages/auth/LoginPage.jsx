@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { getApiErrorMessage } from '../../utils/apiError';
@@ -17,7 +17,6 @@ export function LoginPage() {
   const { login } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const location = useLocation();
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -32,7 +31,7 @@ export function LoginPage() {
     try {
       await login(form);
       showToast('로그인했습니다.');
-      navigate(location.state?.from?.pathname || '/board', { replace: true });
+      navigate('/', { replace: true });
     } catch (error) {
       setErrorMessage(getApiErrorMessage(error, '로그인에 실패했습니다.'));
     } finally {
