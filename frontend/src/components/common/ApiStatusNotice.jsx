@@ -7,8 +7,9 @@ export function ApiStatusNotice({ status }) {
 
   return (
     <section className="api-status-notice">
-      Spring Boot 서버 또는 MySQL 연결을 확인해 주세요. 백엔드는
-      <code> backend/.gradlew.bat bootRun</code>으로 실행합니다.
+      <h3>API Connection Error</h3>
+      <br/>
+        <strong>If the problem persists, Please check your network connection or contact support.</strong>
     </section>
   );
 }

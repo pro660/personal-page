@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { DataLoader } from '../../components/common/DataLoader';
 import './styles/OpportunitySection.css';
 
 const portfolioChecklist = [
@@ -50,7 +51,7 @@ export function OpportunitySection({
       </div>
       {isLoading ? (
         <div className="opportunity-section__loading" role="status" aria-label="공모전 목록을 불러오는 중">
-          <div className="opportunity-section__loader" />
+          <DataLoader />
         </div>
       ) : visibleOpportunities.length > 0 ? (
         <div className="opportunity-section__grid">
@@ -61,6 +62,7 @@ export function OpportunitySection({
               href={item.url}
               key={`${item.url || `${item.source}-${item.title}`}-${index}`}
               rel="noreferrer"
+              style={{ '--card-index': index }}
               target="_blank"
             >
               <div className="opportunity-section__meta">

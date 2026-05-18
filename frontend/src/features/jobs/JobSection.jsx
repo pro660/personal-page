@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { DataLoader } from '../../components/common/DataLoader';
 import './styles/JobSection.css';
 
 function formatDate(value) {
@@ -43,17 +44,18 @@ export function JobSection({
       </div>
       {isLoading ? (
         <div className="job-section__loading" role="status" aria-label="채용 공고를 불러오는 중">
-          <div className="job-section__loader" />
+          <DataLoader />
         </div>
       ) : visibleJobs.length > 0 ? (
         <div className="job-section__grid">
-          {visibleJobs.map((job) => (
+          {visibleJobs.map((job, index) => (
             <a
               aria-label={`${job.title} 채용 공고 열기`}
               className="job-section__card"
               href={job.url}
               key={job.id || `${job.company}-${job.title}`}
               rel="noreferrer"
+              style={{ '--card-index': index }}
               target="_blank"
             >
               <div className="job-section__meta">
